@@ -1,0 +1,113 @@
+name: Sinkronisasi GitHub Contributions
+
+on:
+  schedule:
+    # Berjalan setiap 12 jam (pukul 00:00 dan 12:00 UTC)
+    - cron: '0 0,12 * * *'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  sync-contributions:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Ambil data GitHub GraphQL API
+        env:
+          GH_TOKEN: ${{ secrets.CONTRIBUTIONS_TOKEN || secrets.GITHUB_TOKEN }}
+          GH_USERNAME: ${{ vars.GH_USERNAME || 'KannzDev' }}
+        run: |
+          node - << 'EOF'
+          const https = require('https');
+          const fs = require('fs');
+          const path = require('path');
+
+          const token = process.env.GH_TOKEN;
+          const username = process.env.GH_USERNAME;
+
+          if (!token) {
+            console.error('Error: Token GitHub tidak ditemukan di secrets.');
+            process.exit(1);
+          }
+
+          const query = JSON.stringify({
+            query: `
+              query($username: String!) {
+                user(login: $username) {
+                  contributionsCollection {
+                    contributionCalendar {
+                      totalContributions
+                      weeks {
+                        contributionDays {
+                          date
+                          contributionCount
+                          weekday
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            `,
+            variables: { username }
+          });
+
+          const req = https.request({
+            hostname: 'api.github.com',
+            path: '/graphql',
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              'User-Agent': 'GitHub-Contributions-Sync-Action',
+              'Authorization': `Bearer ${token}`
+            }
+          }, (res) => {
+            let body = '';
+            res.on('data', chunk => body += chunk);
+            res.on('end', () => {
+              if (res.statusCode !== 200) {
+                console.error(`HTTP error ${res.statusCode}: ${body}`);
+                process.exit(1);
+              }
+              const parsed = JSON.parse(body);
+              if (parsed.errors) {
+                console.error('GraphQL errors:', JSON.stringify(parsed.errors));
+                process.exit(1);
+              }
+
+              const calendar = parsed.data?.user?.contributionsCollection?.contributionCalendar;
+              if (!calendar) {
+                console.error('Data contributionCalendar tidak ditemukan untuk user:', username);
+                process.exit(1);
+              }
+
+              const destPath = path.resolve('public/contributions.json');
+              fs.writeFileSync(destPath, JSON.stringify(calendar, null, 2), 'utf-8');
+              console.log(`Berhasil memperbarui public/contributions.json (${calendar.totalContributions} total commit)`);
+            });
+          });
+
+          req.on('error', (err) => {
+            console.error('Request error:', err);
+            process.exit(1);
+          });
+
+          req.write(query);
+          req.end();
+          EOF
+
+      - name: Commit dan push jika ada perubahan
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add public/contributions.json
+          git diff --quiet && git diff --staged --quiet || (git commit -m "chore: perbarui data kontribusi github [skip ci]" && git push)

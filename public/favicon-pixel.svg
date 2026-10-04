@@ -1,0 +1,27 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" width="32" height="32" shape-rendering="crispEdges">
+  <!-- Background: Malam Gunung #16222D -->
+  <rect width="32" height="32" fill="#16222D"/>
+
+  <!-- Lentera body: Kabut Lembah #22343F -->
+  <rect x="12" y="10" width="8" height="12" fill="#22343F"/>
+
+  <!-- Lentera frame: Embun #8DB4C4 -->
+  <rect x="11" y="9" width="10" height="1" fill="#8DB4C4"/>
+  <rect x="11" y="22" width="10" height="1" fill="#8DB4C4"/>
+  <rect x="11" y="10" width="1" height="12" fill="#8DB4C4"/>
+  <rect x="20" y="10" width="1" height="12" fill="#8DB4C4"/>
+
+  <!-- Lentera flame: Lentera #F4A93B -->
+  <rect x="14" y="13" width="4" height="6" fill="#F4A93B"/>
+  <rect x="15" y="12" width="2" height="1" fill="#F4A93B"/>
+
+  <!-- Flame glow inner: brighter -->
+  <rect x="15" y="14" width="2" height="4" fill="#FFCC77"/>
+
+  <!-- Lentera top hook: Embun -->
+  <rect x="15" y="7" width="2" height="2" fill="#8DB4C4"/>
+  <rect x="14" y="6" width="4" height="1" fill="#8DB4C4"/>
+
+  <!-- Ground: -->
+  <rect x="10" y="23" width="12" height="1" fill="#8DB4C4"/>
+</svg>

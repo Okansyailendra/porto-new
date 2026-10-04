@@ -1,0 +1,160 @@
+@import "tailwindcss";
+@import "./styles/tokens.css";
+
+@theme {
+  --color-malam-gunung: var(--color-malam-gunung);
+  --color-kabut-lembah: var(--color-kabut-lembah);
+  --color-lumut: var(--color-lumut);
+  --color-lentera: var(--color-lentera);
+  --color-darah-bug: var(--color-darah-bug);
+  --color-tulang: var(--color-tulang);
+  --color-embun: var(--color-embun);
+
+  --font-pixel: var(--font-pixel);
+  --font-body: var(--font-body);
+
+  --text-display: var(--text-display);
+  --text-h2: var(--text-h2);
+  --text-h3: var(--text-h3);
+  --text-body: var(--text-body);
+  --text-small: var(--text-small);
+
+  --radius-panel: var(--radius-panel);
+  --radius-button: var(--radius-button);
+  --radius-tile: var(--radius-tile);
+}
+
+/* ─── Base ──────────────────────────────────────────────────────────────── */
+
+:root {
+  color-scheme: dark;
+}
+
+body {
+  margin: 0;
+  background-color: var(--color-malam-gunung);
+  color: var(--color-tulang);
+  font-family: var(--font-body);
+  font-size: var(--text-body);
+  line-height: 1.6;
+  min-height: 100dvh;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* ─── Mode Senja (Konami Code Easter Egg — design.md 6.8) ─────────────────── */
+body.senja {
+  --color-malam-gunung: #221A28;
+  --color-kabut-lembah: #2F2338;
+  --color-lentera: #FFA351;
+  --color-lumut: #86B870;
+  transition: background-color 600ms ease, color 600ms ease;
+}
+
+/* ─── Ambient Campfire Embers ────────────────────────────────────────────── */
+@keyframes rise-ember {
+  0% {
+    transform: translateY(0) translateX(0) scale(1);
+    opacity: 0.9;
+  }
+  50% {
+    transform: translateY(-20px) translateX(4px) scale(0.8);
+    opacity: 0.7;
+  }
+  100% {
+    transform: translateY(-45px) translateX(-4px) scale(0.2);
+    opacity: 0;
+  }
+}
+
+.animate-ember-1 {
+  animation: rise-ember 1.8s infinite ease-out;
+}
+.animate-ember-2 {
+  animation: rise-ember 2.4s infinite 0.6s ease-out;
+}
+.animate-ember-3 {
+  animation: rise-ember 2.0s infinite 1.2s ease-out;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-pixel);
+  font-weight: 700;
+}
+
+/* ─── Skip Navigation Link (Accessibility) ──────────────────────────────── */
+
+.skip-link {
+  position: absolute;
+  top: -100%;
+  left: 0;
+  z-index: 9999;
+  padding: 0.75rem 1.25rem;
+  background: var(--color-lentera);
+  color: var(--color-malam-gunung);
+  font-family: var(--font-pixel);
+  font-size: var(--text-small);
+  font-weight: 700;
+  text-decoration: none;
+  border-bottom-right-radius: var(--radius-panel);
+  transition: top 100ms ease;
+}
+
+.skip-link:focus {
+  top: 0;
+  outline: 2px solid var(--color-malam-gunung);
+  outline-offset: 2px;
+}
+
+/* ─── Global Focus Ring (Lentera, 2px, 2px offset per design.md 6.6) ────── */
+
+:focus-visible {
+  outline: 2px solid var(--color-lentera);
+  outline-offset: 2px;
+}
+
+/* Remove focus ring for mouse users */
+:focus:not(:focus-visible) {
+  outline: none;
+}
+
+/* ─── Reduced Motion: Global override (design.md 6.10) ─────────────────── */
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* ─── Scrollbar (subtle, branded) ───────────────────────────────────────── */
+
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--color-malam-gunung);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--color-embun);
+  opacity: 0.4;
+  border-radius: 2px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--color-lentera);
+}
+
+/* ─── Selection ──────────────────────────────────────────────────────────── */
+
+::selection {
+  background: rgba(244, 169, 59, 0.3);
+  color: var(--color-tulang);
+}

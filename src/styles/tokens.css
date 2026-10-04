@@ -1,0 +1,48 @@
+@import "./fonts.css";
+
+:root {
+  /* ==========================================================================
+     Palet Warna (design.md bagian 2)
+     ========================================================================== */
+  --color-malam-gunung: #16222D; /* Latar utama */
+  --color-kabut-lembah: #22343F; /* Panel, kartu, HUD */
+  --color-lumut: #86C782;        /* Status aktif, tile contribution, aksen hijau (kontras > 5.5:1) */
+  --color-lentera: #F4A93B;      /* Aksen utama, tombol utama, sorotan zona aktif */
+  --color-darah-bug: #E5534B;    /* Hit marker, error, bug di mini game */
+  --color-tulang: #E6E0D0;       /* Teks utama (kontras 11:1 di atas Malam Gunung) */
+  --color-embun: #A5C8D6;        /* Teks sekunder, garis tipis, tile kosong (kontras > 6.5:1) */
+
+  /* ==========================================================================
+     Tipografi & Skala (design.md bagian 3)
+     Pixelify Sans (Judul/HUD/Kode) & Atkinson Hyperlegible (Teks isi)
+     Rasio 1.25, basis 16 px
+     ========================================================================== */
+  --font-pixel: 'Pixelify Sans', system-ui, sans-serif;
+  --font-body: 'Atkinson Hyperlegible', system-ui, sans-serif;
+
+  --text-display: clamp(3.5rem, 5vw, 4rem); /* 56 / 64 px */
+  --text-h2: 2.25rem;                       /* 36 px */
+  --text-h3: 1.5rem;                        /* 24 px */
+  --text-body: 1.125rem;                    /* 18 px (16–18 px), panjang baris maks 68 karakter */
+  --text-small: 0.875rem;                   /* 14 px */
+
+  /* ==========================================================================
+     Radius Sudut (design.md bagian 4)
+     ========================================================================== */
+  --radius-panel: 4px;   /* Panel & kartu (kesan blok piksel) */
+  --radius-button: 2px;  /* Tombol */
+  --radius-tile: 0px;    /* Avatar dan tile kotak */
+
+  /* ==========================================================================
+     Token Gerak (design.md bagian 6.9)
+     ========================================================================== */
+  --dur-fast: 120ms;
+  --dur-base: 250ms;
+  --dur-slow: 500ms;
+  --dur-scene: 1200ms;
+  --ease-ui: cubic-bezier(0.2, 0, 0, 1);
+  --ease-pixel: steps(6, end);
+
+  /* Batas Lebar Konten Maksimal (design.md bagian 4) */
+  --max-content-width: 1120px;
+}
