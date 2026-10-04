@@ -22,6 +22,7 @@ export const profileData: ProfileData = {
   name: 'Okan Syailendra',
   roles: ['Frontend Developer', 'Game Developer', 'Software Developer'],
   status: 'Aktif',
+  avatarUrl: '/foto.webp',
   bioBlocks: [
     {
       title: 'Fokus pengembangan',

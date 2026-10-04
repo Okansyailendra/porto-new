@@ -7,6 +7,7 @@ export interface SkillItem {
   level: number // 1 - 5
   description: string
   iconText: string
+  iconUrl?: string // Path ke SVG di /public
 }
 
 export const skillsData: SkillItem[] = [
@@ -17,7 +18,8 @@ export const skillsData: SkillItem[] = [
     category: 'Frontend',
     level: 5,
     description: 'Membangun antarmuka komponen modular dengan manajemen state efisien.',
-    iconText: 'RC'
+    iconText: 'RC',
+    iconUrl: '/material-icon-theme--react.svg'
   },
   {
     id: 'fe-ts',
@@ -25,7 +27,8 @@ export const skillsData: SkillItem[] = [
     category: 'Frontend',
     level: 4,
     description: 'Menulis kode frontend berskala besar dengan tipe data yang ketat.',
-    iconText: 'TS'
+    iconText: 'TS',
+    iconUrl: '/devicon--typescript.svg'
   },
   {
     id: 'fe-tailwind',
@@ -33,7 +36,8 @@ export const skillsData: SkillItem[] = [
     category: 'Frontend',
     level: 5,
     description: 'Menyusun sistem desain utilitas yang konsisten dan responsif.',
-    iconText: 'TW'
+    iconText: 'TW',
+    iconUrl: '/devicon--tailwindcss.svg'
   },
   {
     id: 'fe-html-css',
@@ -41,7 +45,8 @@ export const skillsData: SkillItem[] = [
     category: 'Frontend',
     level: 5,
     description: 'Menyusun struktur semantik, tata letak grid presisi, dan aksesibilitas.',
-    iconText: 'H5'
+    iconText: 'H5',
+    iconUrl: '/skill-icons--html.svg'
   },
 
   // Game
@@ -77,7 +82,8 @@ export const skillsData: SkillItem[] = [
     category: 'Backend dan data',
     level: 4,
     description: 'Menyusun API RESTful dan penanganan data asinkron.',
-    iconText: 'JS'
+    iconText: 'JS',
+    iconUrl: '/material-icon-theme--nodejs.svg'
   },
   {
     id: 'be-php-laravel',
@@ -85,7 +91,8 @@ export const skillsData: SkillItem[] = [
     category: 'Backend dan data',
     level: 4,
     description: 'Membangun arsitektur server MVC dan perutean aplikasi web.',
-    iconText: 'LV'
+    iconText: 'LV',
+    iconUrl: '/material-icon-theme--laravel.svg'
   },
   {
     id: 'be-mysql',
@@ -93,7 +100,8 @@ export const skillsData: SkillItem[] = [
     category: 'Backend dan data',
     level: 4,
     description: 'Merancang skema relasional, optimasi kueri, dan integritas data.',
-    iconText: 'DB'
+    iconText: 'DB',
+    iconUrl: '/logos--mysql.svg'
   },
   {
     id: 'be-python',
@@ -101,7 +109,8 @@ export const skillsData: SkillItem[] = [
     category: 'Backend dan data',
     level: 3,
     description: 'Membuat skrip otomasi pengolahan berkas dan pemrosesan data dasar.',
-    iconText: 'PY'
+    iconText: 'PY',
+    iconUrl: '/material-icon-theme--python.svg'
   },
 
   // Keamanan siber

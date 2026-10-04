@@ -88,11 +88,20 @@ export function SkillsZone() {
                     }`}
                     aria-label={`Slot keahlian ${skill.name}. Level ${skill.level} dari 5`}
                   >
-                    {/* Badge Teks Ikon Piksel */}
-                    <div className="w-8 h-8 flex items-center justify-center border border-embun/20 bg-kabut-lembah rounded-button">
-                      <span className="font-pixel text-small text-lentera group-hover:scale-105 transition-transform">
-                        {skill.iconText}
-                      </span>
+                    {/* Badge Ikon — gambar SVG jika ada, fallback ke teks */}
+                    <div className="w-8 h-8 flex items-center justify-center border border-embun/20 bg-kabut-lembah rounded-button overflow-hidden">
+                      {skill.iconUrl ? (
+                        <img
+                          src={skill.iconUrl}
+                          alt=""
+                          aria-hidden="true"
+                          className="w-5 h-5 object-contain group-hover:scale-110 transition-transform"
+                        />
+                      ) : (
+                        <span className="font-pixel text-small text-lentera group-hover:scale-105 transition-transform">
+                          {skill.iconText}
+                        </span>
+                      )}
                     </div>
 
                     {/* Nama Keahlian */}
