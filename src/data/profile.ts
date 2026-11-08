@@ -20,17 +20,17 @@ export interface ProfileData {
 
 export const profileData: ProfileData = {
   name: 'Okan Syailendra',
-  roles: ['Frontend Developer', 'Game Developer', 'Software Developer'],
+  roles: ['Full Stack Developer', 'UI/UX Designer', 'Software Engineer'],
   status: 'Aktif',
   avatarUrl: '/foto.webp',
   bioBlocks: [
     {
       title: 'Fokus pengembangan',
-      content: 'Saya merancang antarmuka web yang cepat dibuka, nyaman dibaca, dan mudah diakses di berbagai perangkat.'
+      content: 'Saya merancang aplikasi web full stack modern yang cepat dibuka, aman, dan intuitif digunakan.'
     },
     {
       title: 'Pendalaman keahlian',
-      content: 'Fokus utama saya ada pada arsitektur frontend modern, mekanika game 2D, dan interaktivitas yang terukur.'
+      content: 'Fokus utama saya ada pada arsitektur full stack terintegrasi, perancangan UI/UX yang elegan, dan mitigasi keamanan web.'
     },
     {
       title: 'Aktivitas komunitas',
@@ -46,7 +46,7 @@ export const profileData: ProfileData = {
     {
       role: 'Co-External Affairs',
       organization: 'Komunitas Koalisi',
-      description: 'Menghubungkan mahasiswa dengan kegiatan riset dan workshop keamanan siber.'
+      description: 'Mendalami cyber security dan sistem operasi Linux, serta memfasilitasi sesi belajar dan workshop komunitas.'
     }
   ]
 }

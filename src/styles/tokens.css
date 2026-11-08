@@ -2,47 +2,70 @@
 
 :root {
   /* ==========================================================================
-     Palet Warna (design.md bagian 2)
+     Palet Warna (Referensi Desain Binjan / Warm Editorial)
      ========================================================================== */
-  --color-malam-gunung: #16222D; /* Latar utama */
-  --color-kabut-lembah: #22343F; /* Panel, kartu, HUD */
-  --color-lumut: #86C782;        /* Status aktif, tile contribution, aksen hijau (kontras > 5.5:1) */
-  --color-lentera: #F4A93B;      /* Aksen utama, tombol utama, sorotan zona aktif */
-  --color-darah-bug: #E5534B;    /* Hit marker, error, bug di mini game */
-  --color-tulang: #E6E0D0;       /* Teks utama (kontras 11:1 di atas Malam Gunung) */
-  --color-embun: #A5C8D6;        /* Teks sekunder, garis tipis, tile kosong (kontras > 6.5:1) */
+  --color-canvas: #FAF8F5;          /* Latar utama krem / ivory hangat */
+  --color-canvas-card: #FFFFFF;     /* Kartu putih bersih */
+  --color-canvas-subtle: #F3EFE8;   /* Panel & pill abu-krem halus */
+
+  --color-ink: #182538;             /* Teks judul deep navy charcoal */
+  --color-ink-muted: #576A7E;       /* Teks paragraf slate hangat */
+  --color-ink-subtle: #8E9EAF;      /* Teks keterangan & label sekunder */
+
+  --color-teal: #226357;            /* Aksen utama: Deep ocean pine teal */
+  --color-teal-dark: #15453C;
+  --color-teal-light: #EBF5F3;      /* Latar lembut aksen teal */
+
+  --color-coral: #EA5938;           /* Aksen cerah: Terracotta coral */
+  --color-coral-dark: #C74424;
+  --color-coral-light: #FFF0EB;     /* Latar lembut aksen coral */
+
+  --color-mustard: #F4A723;         /* Aksen hangat: Sunshine golden mustard */
+  --color-mustard-dark: #D48E17;
+  --color-mustard-light: #FEF7EA;   /* Latar lembut aksen mustard */
+
+  --color-border: #E8E4DC;          /* Garis batas halus */
+  --color-border-card: #EFECE6;     /* Garis kartu */
+
+  /* Legacy theme aliases */
+  --color-malam-gunung: var(--color-canvas);
+  --color-kabut-lembah: var(--color-canvas-card);
+  --color-tulang: var(--color-ink);
+  --color-embun: var(--color-ink-muted);
+  --color-lentera: var(--color-coral);
+  --color-lumut: var(--color-teal);
+  --color-darah-bug: #D94436;
 
   /* ==========================================================================
-     Tipografi & Skala (design.md bagian 3)
-     Pixelify Sans (Judul/HUD/Kode) & Atkinson Hyperlegible (Teks isi)
-     Rasio 1.25, basis 16 px
+     Tipografi & Skala
      ========================================================================== */
-  --font-pixel: 'Pixelify Sans', system-ui, sans-serif;
-  --font-body: 'Atkinson Hyperlegible', system-ui, sans-serif;
+  --font-sans: 'Plus Jakarta Sans', system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+  --font-display: 'Plus Jakarta Sans', system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+  --font-script: 'Caveat', cursive;
+  --font-pixel: 'Plus Jakarta Sans', system-ui, sans-serif;
+  --font-body: 'Plus Jakarta Sans', system-ui, sans-serif;
 
-  --text-display: clamp(3.5rem, 5vw, 4rem); /* 56 / 64 px */
-  --text-h2: 2.25rem;                       /* 36 px */
-  --text-h3: 1.5rem;                        /* 24 px */
-  --text-body: 1.125rem;                    /* 18 px (16–18 px), panjang baris maks 68 karakter */
-  --text-small: 0.875rem;                   /* 14 px */
+  --text-display: clamp(3rem, 6vw, 5.5rem);
+  --text-h2: clamp(2.25rem, 4vw, 3.75rem);
+  --text-h3: clamp(1.5rem, 2.5vw, 2.25rem);
+  --text-body: 1.0625rem;
+  --text-small: 0.875rem;
 
   /* ==========================================================================
-     Radius Sudut (design.md bagian 4)
+     Radius Sudut (Pill & Rounded Card khas referensi)
      ========================================================================== */
-  --radius-panel: 4px;   /* Panel & kartu (kesan blok piksel) */
-  --radius-button: 2px;  /* Tombol */
-  --radius-tile: 0px;    /* Avatar dan tile kotak */
+  --radius-panel: 28px;
+  --radius-card: 24px;
+  --radius-button: 9999px;
+  --radius-tile: 18px;
 
   /* ==========================================================================
-     Token Gerak (design.md bagian 6.9)
+     Bayangan Halus & Hangat
      ========================================================================== */
-  --dur-fast: 120ms;
-  --dur-base: 250ms;
-  --dur-slow: 500ms;
-  --dur-scene: 1200ms;
-  --ease-ui: cubic-bezier(0.2, 0, 0, 1);
-  --ease-pixel: steps(6, end);
+  --shadow-soft: 0 4px 20px -2px rgba(24, 37, 56, 0.05);
+  --shadow-card: 0 10px 30px -4px rgba(24, 37, 56, 0.06);
+  --shadow-elevated: 0 20px 40px -10px rgba(24, 37, 56, 0.09);
 
-  /* Batas Lebar Konten Maksimal (design.md bagian 4) */
-  --max-content-width: 1120px;
+  /* Batas Lebar Konten Layar Penuh */
+  --max-content-width: 1680px;
 }

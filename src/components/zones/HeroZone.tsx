@@ -1,223 +1,193 @@
-import { useState, useRef } from 'react'
+import { useState } from 'react'
 
 interface HeroZoneProps {
   onExploreProjects?: () => void
-  onPlayGame?: () => void
 }
 
-interface Spark {
-  id: number
-  x: number
-  y: number
-}
+export function HeroZone({ onExploreProjects }: HeroZoneProps) {
+  const [photoLoaded, setPhotoLoaded] = useState(false)
 
-export function HeroZone({ onExploreProjects, onPlayGame }: HeroZoneProps) {
-  const [parallax, setParallax] = useState({ x: 0, y: 0 })
-  const [sparks, setSparks] = useState<Spark[]>([])
-  const illustrationRef = useRef<HTMLDivElement>(null)
-
-  function handleScroll(targetId: string) {
-    const el = document.getElementById(targetId)
+  function scrollTo(id: string) {
+    const el = document.getElementById(id)
     if (el) {
       el.scrollIntoView({ behavior: 'smooth', block: 'start' })
     }
   }
 
-  // Parallax tracking inside the illustration card (design.md 6.3)
-  function handleMouseMove(e: React.MouseEvent<HTMLDivElement>) {
-    if (!illustrationRef.current) return
-    const rect = illustrationRef.current.getBoundingClientRect()
-    const relX = (e.clientX - rect.left) / rect.width - 0.5
-    const relY = (e.clientY - rect.top) / rect.height - 0.5
-    setParallax({
-      x: relX * 12, // max 12px per design.md 6.3
-      y: relY * 8
-    })
-  }
-
-  function handleMouseLeave() {
-    setParallax({ x: 0, y: 0 })
-  }
-
-  // Shoot interaction on campsite illustration (design.md 6.3)
-  function handleCampClick(e: React.MouseEvent<HTMLDivElement>) {
-    if (!illustrationRef.current) return
-    const rect = illustrationRef.current.getBoundingClientRect()
-    const sparkX = e.clientX - rect.left
-    const sparkY = e.clientY - rect.top
-
-    const newSpark: Spark = { id: Date.now(), x: sparkX, y: sparkY }
-    setSparks((prev) => [...prev.slice(-4), newSpark])
-
-    setTimeout(() => {
-      setSparks((prev) => prev.filter((s) => s.id !== newSpark.id))
-    }, 400)
-  }
-
   return (
     <section
       id="hero"
-      aria-label="Zona pembuka — Halo, saya Okan"
-      className="pt-10 pb-16 md:pt-16 md:pb-24 flex flex-col lg:flex-row items-center justify-between gap-10 relative"
+      aria-label="Zona Pembuka — Halo, saya Okan"
+      className="min-h-[calc(100dvh-5.5rem)] lg:h-[calc(100dvh-5.5rem)] flex flex-col justify-center py-8 lg:py-2 relative overflow-hidden"
     >
-      {/* Kolom Teks Kiri */}
-      <div className="flex-1 text-left space-y-6">
-        <h1 className="font-pixel text-4xl sm:text-5xl lg:text-display text-tulang leading-tight">
-          Halo, saya <span className="text-lentera">Okan</span>.
-        </h1>
-
-        <p className="font-body text-base sm:text-lg md:text-xl text-tulang/90 max-w-[54ch] leading-relaxed">
-          Saya membuat antarmuka web dan game kecil. Saya juga mendalami keamanan siber di Komunitas Koalisi.
-        </p>
-
-        {/* Tombol Aksi */}
-        <div className="flex flex-wrap items-center gap-4 pt-2">
-          <button
-            type="button"
-            onClick={onPlayGame ? onPlayGame : () => handleScroll('arcade')}
-            className="px-6 py-3 bg-lentera text-malam-gunung font-pixel text-base font-semibold rounded-button shadow-md hover:brightness-105 active:translate-y-[1px] transition-all focus-visible:outline-2 focus-visible:outline-lentera focus-visible:outline-offset-2 flex items-center gap-2 cursor-pointer"
-          >
-            <span>🎯</span>
-            <span>Main Bug Hunt</span>
-          </button>
-
-          <button
-            type="button"
-            onClick={onExploreProjects ? onExploreProjects : () => handleScroll('project')}
-            className="px-6 py-3 border border-embun text-tulang font-pixel text-base rounded-button hover:border-lentera hover:text-lentera active:translate-y-[1px] transition-all focus-visible:outline-2 focus-visible:outline-lentera focus-visible:outline-offset-2 flex items-center gap-2 cursor-pointer"
-          >
-            <span>🗺️</span>
-            <span>Lihat project</span>
-          </button>
-        </div>
-      </div>
-
-      {/* Kolom Kanan: Ilustrasi Pixel Art Kemah Malam Pegunungan Interaktif */}
-      <div
-        ref={illustrationRef}
-        onMouseMove={handleMouseMove}
-        onMouseLeave={handleMouseLeave}
-        onClick={handleCampClick}
-        className="w-full lg:w-[480px] aspect-4/3 relative bg-malam-gunung border border-embun/30 rounded-panel overflow-hidden shadow-2xl flex items-center justify-center select-none cursor-crosshair group"
-        aria-label="Ilustrasi interaktif perkemahan malam pegunungan. Klik untuk menembakkan partikel."
-        title="Klik di perkemahan untuk menembak!"
-      >
-        <svg
-          viewBox="0 0 400 300"
-          className="w-full h-full block"
-          shapeRendering="crispEdges"
-        >
-          {/* Langit malam gelap */}
-          <rect width="400" height="300" fill="#16222D" />
-
-          {/* Bintang-bintang malam (statis) */}
-          <rect x="40" y="30" width="2" height="2" fill="#E6E0D0" opacity="0.8" />
-          <rect x="85" y="55" width="3" height="3" fill="#F4A93B" opacity="0.9" />
-          <rect x="130" y="25" width="2" height="2" fill="#8DB4C4" opacity="0.7" />
-          <rect x="190" y="45" width="2" height="2" fill="#E6E0D0" opacity="0.6" />
-          <rect x="250" y="20" width="3" height="3" fill="#FFE28A" opacity="0.9" />
-          <rect x="310" y="60" width="2" height="2" fill="#E6E0D0" opacity="0.7" />
-          <rect x="360" y="35" width="2" height="2" fill="#8DB4C4" opacity="0.8" />
-          <rect x="160" y="80" width="2" height="2" fill="#E6E0D0" opacity="0.5" />
-          <rect x="280" y="75" width="2" height="2" fill="#F4A93B" opacity="0.6" />
-
-          {/* Siluet Pegunungan Jauh (Layer 1 - gerak pelan) */}
-          <g
-            style={{
-              transform: `translate3d(${parallax.x * 0.3}px, ${parallax.y * 0.3}px, 0)`,
-              transition: 'transform 100ms ease-out'
-            }}
-          >
-            <polygon
-              points="0,220 80,140 180,210 260,130 350,220 400,180 400,300 0,300"
-              fill="#1E2F3E"
-            />
-          </g>
-
-          {/* Siluet Pohon Pinus Gelap (Layer 2 - gerak sedang) */}
-          <g
-            style={{
-              transform: `translate3d(${parallax.x * 0.6}px, ${parallax.y * 0.6}px, 0)`,
-              transition: 'transform 100ms ease-out'
-            }}
-          >
-            {/* Pohon 1 */}
-            <polygon points="30,240 15,260 45,260" fill="#152430" />
-            <polygon points="30,230 18,245 42,245" fill="#152430" />
-            <polygon points="30,218 22,232 38,232" fill="#152430" />
-            {/* Pohon 2 */}
-            <polygon points="65,235 48,255 82,255" fill="#182A38" />
-            <polygon points="65,222 52,240 78,240" fill="#182A38" />
-            <polygon points="65,210 56,225 74,225" fill="#182A38" />
-            {/* Pohon 3 Kanan */}
-            <polygon points="340,235 320,260 360,260" fill="#182A38" />
-            <polygon points="340,220 325,240 355,240" fill="#182A38" />
-            <polygon points="340,208 330,223 350,223" fill="#182A38" />
-            {/* Pohon 4 Kanan */}
-            <polygon points="375,240 360,260 390,260" fill="#152430" />
-            <polygon points="375,228 364,242 386,242" fill="#152430" />
-          </g>
-
-          {/* Tanah Depan & Tenda (Layer 3 - gerak responsif penuh) */}
-          <g
-            style={{
-              transform: `translate3d(${parallax.x}px, ${parallax.y}px, 0)`,
-              transition: 'transform 100ms ease-out'
-            }}
-          >
-            {/* Tanah Depan */}
-            <rect x="0" y="248" width="400" height="52" fill="#0F1820" />
-            <rect x="0" y="246" width="400" height="2" fill="#22343F" />
-
-            {/* Tenda Berkemah (Tent) */}
-            <polygon points="170,165 110,250 230,250" fill="#22343F" />
-            <line x1="170" y1="165" x2="170" y2="250" stroke="#8DB4C4" strokeWidth="2" />
-            <polygon points="170,185 145,250 195,250" fill="#16222D" />
-            <polygon points="170,195 155,250 185,250" fill="#F4A93B" opacity="0.85" />
-            <line x1="170" y1="165" x2="90" y2="255" stroke="#8DB4C4" strokeWidth="1" strokeDasharray="3,3" />
-            <line x1="170" y1="165" x2="250" y2="255" stroke="#8DB4C4" strokeWidth="1" strokeDasharray="3,3" />
-
-            {/* Tiang Lentera Luar */}
-            <rect x="255" y="180" width="3" height="70" fill="#8DB4C4" />
-            <rect x="255" y="180" width="16" height="3" fill="#8DB4C4" />
-            <rect x="268" y="183" width="2" height="6" fill="#8DB4C4" />
-
-            {/* Lentera Berpendar dengan Animasi Berkedip Pelan */}
-            <circle
-              cx="269"
-              cy="198"
-              r="24"
-              fill="#F4A93B"
-              className="animate-pulse"
-              style={{ animationDuration: '2.5s', opacity: 0.22 }}
-            />
-            <rect x="264" y="189" width="10" height="15" fill="#22343F" stroke="#8DB4C4" strokeWidth="1" />
-            <rect x="266" y="192" width="6" height="9" fill="#F4A93B" />
-            <rect x="267" y="194" width="4" height="5" fill="#FFE28A" />
-
-            {/* Kotak Petunjuk Kayu di Dekat Tenda */}
-            <rect x="285" y="215" width="28" height="18" fill="#3A281A" stroke="#8DB4C4" strokeWidth="1" />
-            <rect x="297" y="233" width="4" height="20" fill="#2A1B10" />
-            <text x="299" y="228" fill="#F4A93B" fontSize="9" fontFamily="'Pixelify Sans', monospace" textAnchor="middle">
-              KAN
-            </text>
-          </g>
-        </svg>
-
-        {/* Hit Sparks on Click */}
-        {sparks.map((spark) => (
-          <div
-            key={spark.id}
-            className="absolute pointer-events-none transform -translate-x-1/2 -translate-y-1/2 animate-ping"
-            style={{ left: `${spark.x}px`, top: `${spark.y}px` }}
-          >
-            <span className="font-pixel text-xs text-lentera font-bold">✦ HIT</span>
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-6 xl:gap-8 items-center w-full my-auto">
+        {/* Kolom Kiri: Eyebrow Dot, Headline 3 Baris, Email, CTA & Pengalaman */}
+        <div className="lg:col-span-4 text-left flex flex-col justify-center space-y-6 sm:space-y-7 lg:space-y-8 order-2 lg:order-1">
+          {/* Eyebrow Label: Dot Orange + Role */}
+          <div className="flex items-center gap-2">
+            <span className="w-2 h-2 rounded-full bg-[#EA5938] shrink-0" aria-hidden="true" />
+            <span className="text-[11px] sm:text-xs font-bold uppercase tracking-[0.18em] text-[#182538]">
+              FULL STACK DEVELOPER &amp; UI/UX DESIGNER
+            </span>
           </div>
-        ))}
 
-        {/* Indikator Live Petualangan */}
-        <div className="absolute bottom-3 right-3 px-2 py-0.5 bg-malam-gunung/90 border border-embun/30 rounded-button font-pixel text-[11px] text-lentera">
-          Parallax Aktif · Tembak di Layar
+          {/* Main Headline: Hey / There, / I'm Okan. (Dot Orange) */}
+          <div className="space-y-2 sm:space-y-3">
+            <h1 className="text-5xl sm:text-6xl md:text-7xl lg:text-[76px] xl:text-[88px] font-black text-[#182538] tracking-tight leading-[0.98]">
+              Hey <br />
+              There, <br />
+              I'm Okan<span className="text-[#EA5938]">.</span>
+            </h1>
+
+            <div className="pt-1">
+              <a
+                href="mailto:okanwahyudi540@gmail.com"
+                className="text-base sm:text-lg font-bold text-[#EA5938] hover:underline underline-offset-4 transition-all block"
+              >
+                okanwahyudi540@gmail.com
+              </a>
+            </div>
+          </div>
+
+          {/* Action CTAs */}
+          <div className="flex flex-wrap items-center gap-3.5 pt-1">
+            <button
+              type="button"
+              onClick={onExploreProjects ? onExploreProjects : () => scrollTo('project')}
+              className="px-7 py-3.5 bg-[#145E55] text-white text-sm sm:text-base font-bold rounded-full shadow-md hover:bg-[#0E443E] hover:shadow-lg active:scale-98 transition-all flex items-center gap-2 cursor-pointer"
+            >
+              <span>Lihat Project</span>
+              <span className="text-xs">↗</span>
+            </button>
+            <button
+              type="button"
+              onClick={() => scrollTo('kontak')}
+              className="px-6 py-3.5 bg-white border border-[#E8E4DC] text-[#182538] text-sm sm:text-base font-bold rounded-full hover:border-[#145E55] hover:text-[#145E55] shadow-2xs active:scale-98 transition-all cursor-pointer"
+            >
+              Hubungi Saya
+            </button>
+          </div>
+
+          {/* Stat Box: 2+ TAHUN PENGALAMAN */}
+          <div className="flex items-center gap-4 pt-2 sm:pt-4">
+            <span className="text-6xl sm:text-7xl lg:text-8xl font-black text-[#182538] tracking-tight leading-none">
+              2+
+            </span>
+            <div className="text-[11px] sm:text-xs font-bold uppercase tracking-wider text-[#576A7E] leading-tight">
+              TAHUN <br />
+              PENGALAMAN
+            </div>
+          </div>
+        </div>
+
+        {/* Kolom Tengah: Kubah Vaulted Arch Arsitektural Berskala Besar, Grid Blueprint, Foto Okan & Badge Indonesia */}
+        <div className="lg:col-span-5 flex justify-center items-end order-1 lg:order-2 relative select-none px-2">
+          <div className="relative flex items-end justify-center">
+            {/* Aksen Garis Sketsa Pensil Halus di Belakang Kanan Atas Kubah */}
+            <svg
+              className="absolute -top-8 sm:-top-10 -right-10 sm:-right-16 w-44 sm:w-60 h-44 sm:h-60 pointer-events-none opacity-30 text-[#144E43] -z-10"
+              stroke="currentColor"
+              fill="none"
+              viewBox="0 0 100 100"
+              aria-hidden="true"
+            >
+              <path d="M 15,85 C 45,45 65,30 95,12" strokeWidth="1" strokeDasharray="3 3" />
+              <path d="M 25,90 C 55,50 75,35 98,20" strokeWidth="1.2" strokeDasharray="2 2" />
+              <path d="M 10,75 C 40,35 60,20 88,8" strokeWidth="0.8" />
+              <path d="M 35,95 C 65,58 85,42 102,28" strokeWidth="1" strokeDasharray="4 2" />
+              <path d="M 45,75 C 60,55 78,42 95,35" strokeWidth="0.8" strokeDasharray="2 3" />
+            </svg>
+
+            {/* Aksen Kapsul Orange Melayang di Sisi Kiri Kubah */}
+            <div
+              className="absolute top-1/3 -left-5 sm:-left-7 w-3 sm:w-3.5 h-12 sm:h-14 bg-[#EA5938] rounded-full shadow-md -rotate-15 z-20 pointer-events-none"
+              aria-hidden="true"
+            />
+
+            {/* Kubah Lengkung Vaulted Arch Skala Besar Warna Deep Teal dengan Grid Blueprint */}
+            <div className="relative w-[340px] sm:w-[420px] md:w-[480px] lg:w-[510px] xl:w-[560px] 2xl:w-[600px] h-[440px] sm:h-[520px] md:h-[580px] lg:h-[620px] xl:h-[660px] rounded-t-[190px] sm:rounded-t-[230px] md:rounded-t-[260px] lg:rounded-t-[290px] xl:rounded-t-[310px] bg-[#144E43] overflow-hidden flex items-end justify-center shadow-2xl">
+              {/* Overlay Pola Grid Arsitektural & Tiga Lingkaran Konsentris Tepat di Belakang Kepala */}
+              <svg
+                className="absolute inset-0 w-full h-full pointer-events-none opacity-22 text-white"
+                stroke="currentColor"
+                fill="none"
+                xmlns="http://www.w3.org/2000/svg"
+                aria-hidden="true"
+              >
+                <defs>
+                  <pattern id="arch-grid-pattern" width="36" height="36" patternUnits="userSpaceOnUse">
+                    <path d="M 36 0 L 0 0 0 36" fill="none" stroke="currentColor" strokeWidth="0.75" />
+                  </pattern>
+                </defs>
+                <rect width="100%" height="100%" fill="url(#arch-grid-pattern)" />
+
+                {/* 3 Lingkaran Konsentris Halus (Halo / Target) di Belakang Kepala */}
+                <circle cx="50%" cy="38%" r="75" stroke="currentColor" strokeWidth="1" strokeDasharray="3 3" />
+                <circle cx="50%" cy="38%" r="130" stroke="currentColor" strokeWidth="1" />
+                <circle cx="50%" cy="38%" r="185" stroke="currentColor" strokeWidth="1" strokeDasharray="4 4" />
+
+                {/* Garis Sumbu Vertikal & Horisontal */}
+                <line x1="50%" y1="0" x2="50%" y2="100%" stroke="currentColor" strokeWidth="1" strokeDasharray="4 4" />
+                <line x1="0" y1="38%" x2="100%" y2="38%" stroke="currentColor" strokeWidth="1" strokeDasharray="4 4" />
+              </svg>
+
+              {/* Foto Okan Transparan Berdefinisi Tinggi Tampil Besar & Gagah di Dalam Kubah */}
+              <img
+                src="/foto.webp"
+                alt="Okan Syailendra"
+                width={1400}
+                height={1252}
+                onLoad={() => setPhotoLoaded(true)}
+                className={`relative z-10 w-full h-auto max-h-[430px] sm:max-h-[510px] md:max-h-[570px] lg:max-h-[610px] xl:max-h-[650px] object-contain object-bottom filter drop-shadow-2xl transition-all duration-500 ${
+                  photoLoaded ? 'opacity-100 scale-100' : 'opacity-0 scale-95'
+                }`}
+                loading="eager"
+                decoding="async"
+              />
+
+              {/* Badge Hitam Miring 'BASED IN INDONESIA' di Bagian Bawah Kanan Portrait */}
+              <div className="absolute bottom-5 right-3 sm:right-6 z-20 -rotate-3 bg-[#182538] text-white text-[11px] sm:text-xs font-black uppercase tracking-[0.2em] px-4 py-2 shadow-2xl border border-white/10 select-none">
+                BASED IN INDONESIA
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Kolom Kanan: Kutipan dengan Tanda Petik Orange & Stempel 'Ok' */}
+        <div className="lg:col-span-3 text-left lg:text-right flex flex-col justify-center space-y-8 sm:space-y-12 lg:space-y-14 order-3 pl-2 sm:pl-4 lg:pl-6">
+          {/* Tanda Petik Terracotta Orange & Teks Kutipan */}
+          <div className="space-y-2">
+            <span
+              className="text-4xl sm:text-5xl font-serif text-[#EA5938] leading-none block select-none lg:ml-auto"
+              aria-hidden="true"
+            >
+              “
+            </span>
+
+            <p className="text-xl sm:text-2xl lg:text-[24px] xl:text-[26px] text-[#182538] font-bold leading-snug max-w-[20ch] lg:ml-auto">
+              I design beautifully simple things, and I love what I do.
+            </p>
+
+            <p className="text-xs sm:text-sm text-[#8E9EAF] font-medium pt-1">
+              Available for selected projects
+            </p>
+          </div>
+
+          {/* Stempel Cap Konsentris 'Ok' & Teks Dua Baris */}
+          <div className="flex flex-col items-start lg:items-end space-y-3">
+            <div className="relative w-20 h-20 sm:w-22 sm:h-22 rounded-full border border-dashed border-[#182538]/30 flex items-center justify-center p-1.5 group hover:rotate-12 transition-transform duration-500 cursor-default select-none">
+              <div className="w-full h-full rounded-full border border-[#182538]/50 flex items-center justify-center bg-[#FAF8F5]">
+                <span className="font-script text-2xl font-bold text-[#182538] italic">
+                  Ok
+                </span>
+              </div>
+            </div>
+
+            <div className="text-left lg:text-right font-black text-[10px] sm:text-[11px] uppercase tracking-wider text-[#182538] leading-tight">
+              <p>VERIFIED</p>
+              <p>PROFESSIONAL DEVELOPER</p>
+            </div>
+          </div>
         </div>
       </div>
     </section>

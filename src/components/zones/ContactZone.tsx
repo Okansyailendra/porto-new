@@ -1,137 +1,272 @@
-import { useState } from 'react'
+import { useState, type FormEvent } from 'react'
 
 export function ContactZone() {
   const [copied, setCopied] = useState(false)
-  const email = 'okansyailendra@gmail.com'
+  const [name, setName] = useState('')
+  const [senderEmail, setSenderEmail] = useState('')
+  const [message, setMessage] = useState('')
+  const [status, setStatus] = useState<'idle' | 'sending' | 'success' | 'error'>('idle')
+  const [statusMessage, setStatusMessage] = useState('')
+
+  const recipientEmail = 'okanwahyudi540@gmail.com'
 
   function copyEmail() {
-    navigator.clipboard.writeText(email).then(() => {
+    navigator.clipboard.writeText(recipientEmail).then(() => {
       setCopied(true)
       setTimeout(() => setCopied(false), 2000)
     })
   }
 
+  async function handleSubmit(e: FormEvent) {
+    e.preventDefault()
+    if (!name.trim() || !senderEmail.trim() || !message.trim()) {
+      setStatus('error')
+      setStatusMessage('Mohon lengkapi nama lengkap, alamat email, dan pesan Anda.')
+      return
+    }
+
+    setStatus('sending')
+    setStatusMessage('')
+
+    try {
+      const response = await fetch(`https://formsubmit.co/ajax/${recipientEmail}`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Accept: 'application/json'
+        },
+        body: JSON.stringify({
+          name: name.trim(),
+          email: senderEmail.trim(),
+          message: message.trim(),
+          _subject: `Pesan Baru Portofolio dari ${name.trim()}`,
+          _template: 'table',
+          _captcha: 'false'
+        })
+      })
+
+      const data = await response.json()
+      if (response.ok && (data.success === 'true' || data.success === true || response.status === 200)) {
+        setStatus('success')
+        setStatusMessage(`Pesan Anda berhasil terkirim dan langsung masuk ke kotak masuk ${recipientEmail}.`)
+        setName('')
+        setSenderEmail('')
+        setMessage('')
+      } else {
+        throw new Error(data.message || 'Gagal mengirim pesan')
+      }
+    } catch {
+      setStatus('error')
+      setStatusMessage(
+        'Layanan otomatis sedang sibuk. Jangan khawatir, Anda dapat langsung mengirimkan pesan melalui aplikasi email Anda.'
+      )
+    }
+  }
+
+  function handleOpenMailClient() {
+    const subject = encodeURIComponent(`Kolaborasi Portofolio dari ${name || 'Pengunjung'}`)
+    const body = encodeURIComponent(
+      `${message}\n\n---\nPengirim: ${name}\nEmail: ${senderEmail}`
+    )
+    window.location.href = `mailto:${recipientEmail}?subject=${subject}&body=${body}`
+  }
+
   return (
     <section
       id="kontak"
-      aria-label="Zona 6 Kontak — Api Unggun Terakhir"
-      className="py-16 md:py-24 border-t border-embun/15 text-center relative"
+      aria-label="Zona Kontak — Let's make something amazing together"
+      className="min-h-[100dvh] flex flex-col justify-between py-12 lg:py-16 border-t border-[#E8E4DC] relative text-center"
     >
-      <div className="max-w-[760px] mx-auto p-8 md:p-12 bg-kabut-lembah/80 border border-embun/30 rounded-panel space-y-8 relative overflow-hidden shadow-2xl">
-        {/* Glow ambient api unggun */}
-        <div
-          className="absolute -top-24 left-1/2 -translate-x-1/2 w-96 h-96 bg-lentera/10 rounded-full blur-3xl pointer-events-none"
-          aria-hidden="true"
-        />
-
-        {/* Pixel Art Api Unggun (Campfire) */}
-        <div className="flex flex-col items-center justify-center select-none" aria-hidden="true">
-          <div className="relative w-16 h-16 flex items-center justify-center">
-            {/* Percikan Api / Embers yang melayang naik */}
-            <span className="absolute top-2 left-6 w-1.5 h-1.5 bg-lentera rounded-[1px] animate-ember-1 pointer-events-none" aria-hidden="true" />
-            <span className="absolute top-3 right-5 w-1.5 h-1.5 bg-darah-bug rounded-[1px] animate-ember-2 pointer-events-none" aria-hidden="true" />
-            <span className="absolute top-1 left-8 w-1 h-1 bg-yellow-200 rounded-[1px] animate-ember-3 pointer-events-none" aria-hidden="true" />
-
-            {/* Api pixel art SVG */}
-            <svg
-              viewBox="0 0 24 24"
-              className="w-16 h-16 animate-bounce"
-              style={{ animationDuration: '1.2s' }}
-            >
-              {/* Batang Kayu */}
-              <rect x="4" y="19" width="16" height="3" fill="#6B4423" />
-              <rect x="6" y="17" width="12" height="3" fill="#8B5A2B" />
-              <rect x="7" y="18" width="10" height="1" fill="#4A2E1B" />
-              {/* Api Luar (Lentera Gold) */}
-              <path
-                d="M12 2 C10 6 7 9 7 13 C7 16 9.2 18 12 18 C14.8 18 17 16 17 13 C17 9 14 6 12 2 Z"
-                fill="#F4A93B"
-              />
-              {/* Api Tengah (Orange/Darah Bug) */}
-              <path
-                d="M12 6 C10.8 9 9 11 9 14 C9 16 10.3 17 12 17 C13.7 17 15 16 15 14 C15 11 13.2 9 12 6 Z"
-                fill="#E5534B"
-              />
-              {/* Api Inti Terang (Kuning Terang) */}
-              <path
-                d="M12 9 C11.3 11 10.5 12.5 10.5 14.5 C10.5 15.8 11.2 16.5 12 16.5 C12.8 16.5 13.5 15.8 13.5 14.5 C13.5 12.5 12.7 11 12 9 Z"
-                fill="#FFE28A"
-              />
-            </svg>
-          </div>
-          <span className="font-pixel text-xs text-embun/60 mt-1">Istirahat di perkemahan</span>
-        </div>
-
-        {/* Judul & Deskripsi */}
-        <div className="space-y-3">
-          <h2 className="font-pixel text-3xl sm:text-4xl text-tulang leading-tight">
-            Petualangan hari ini sampai di sini.
+      <div className="w-full max-w-[840px] mx-auto flex-1 flex flex-col justify-center py-4 sm:py-6">
+        {/* Header Section dengan Gaya Editorial Warm Ivory & Terracotta */}
+        <div className="space-y-3 sm:space-y-4 mb-8 sm:mb-10 select-none">
+          <h2 className="text-4xl sm:text-5xl lg:text-6xl font-black text-[#182538] tracking-tight leading-[1.08]">
+            Let’s make something <br className="hidden sm:block" />
+            <span className="text-[#145E55]">amazing together</span>
+            <span className="text-[#EA5938]">.</span>
           </h2>
-          <p className="font-body text-base sm:text-lg text-tulang/90 max-w-[58ch] mx-auto leading-relaxed">
-            Mari berkolaborasi membuat antarmuka web yang intuitif, game piksel, atau diskusikan ide proyek Anda. Kirimkan pesan ke surel atau temukan saya di jejaring profesional.
+
+          <p className="text-sm sm:text-base lg:text-lg text-[#576A7E] max-w-[56ch] mx-auto leading-relaxed px-4">
+            Terbuka untuk kolaborasi pengembangan web full stack, perancangan antarmuka UI/UX modern, maupun konsultasi sistem. Pesan Anda akan langsung masuk otomatis ke email saya.
           </p>
         </div>
 
-        {/* Tombol Kontak */}
-        <div className="flex flex-wrap items-center justify-center gap-4 pt-2">
-          {/* Kirim Email */}
-          <a
-            href={`mailto:${email}`}
-            className="px-6 py-3 bg-lentera text-malam-gunung font-pixel text-base font-semibold rounded-button shadow-md hover:brightness-105 active:translate-y-[1px] transition-all focus-visible:outline-2 focus-visible:outline-lentera focus-visible:outline-offset-2 flex items-center gap-2"
-          >
-            <svg viewBox="0 0 20 20" fill="currentColor" className="w-5 h-5" aria-hidden="true">
-              <path d="M2.003 5.884L10 9.882l7.997-3.998A2 2 0 0016 4H4a2 2 0 00-1.997 1.884z" />
-              <path d="M18 8.118l-8 4-8-4V14a2 2 0 002 2h12a2 2 0 002-2V8.118z" />
-            </svg>
-            <span>Kirim email</span>
-          </a>
+        {/* Card Form Kontak Bersih & Elegan Sesuai Tema Portofolio */}
+        <div className="relative bg-white text-[#182538] rounded-3xl p-6 sm:p-10 lg:p-12 border border-[#E8E4DC] shadow-xl text-left transition-all">
+          <form onSubmit={handleSubmit} className="relative z-10 space-y-6">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-5 sm:gap-6">
+              {/* Field 1: Nama Lengkap */}
+              <div className="space-y-2">
+                <label
+                  htmlFor="contact-name"
+                  className="block text-xs font-extrabold uppercase tracking-wider text-[#182538]"
+                >
+                  Nama Lengkap
+                </label>
+                <input
+                  id="contact-name"
+                  type="text"
+                  required
+                  value={name}
+                  onChange={(e) => setName(e.target.value)}
+                  placeholder="cth. Budi Pratama"
+                  className="w-full px-4 sm:px-5 py-3.5 bg-[#FAF8F5] border border-[#E8E4DC] rounded-2xl text-[#182538] placeholder-[#8E9EAF] text-sm sm:text-base font-medium focus:outline-none focus:border-[#145E55] focus:bg-white focus:ring-3 focus:ring-[#145E55]/10 transition-all font-sans"
+                />
+              </div>
 
-          {/* Salin Email */}
-          <button
-            type="button"
-            onClick={copyEmail}
-            className="px-5 py-3 border border-embun text-tulang font-pixel text-base rounded-button hover:border-lentera hover:text-lentera active:translate-y-[1px] transition-all focus-visible:outline-2 focus-visible:outline-lentera focus-visible:outline-offset-2 flex items-center gap-2"
-            aria-label="Salin alamat email ke clipboard"
-          >
-            <svg viewBox="0 0 20 20" fill="currentColor" className="w-4 h-4" aria-hidden="true">
-              <path d="M8 3a1 1 0 011-1h2a1 1 0 110 2H9a1 1 0 01-1-1z" />
-              <path d="M6 3a2 2 0 00-2 2v11a2 2 0 002 2h8a2 2 0 002-2V5a2 2 0 00-2-2 3 3 0 01-3 3H9a3 3 0 01-3-3z" />
-            </svg>
-            <span>{copied ? 'Tersalin!' : 'Salin email'}</span>
-          </button>
+              {/* Field 2: Alamat Email */}
+              <div className="space-y-2">
+                <label
+                  htmlFor="contact-email"
+                  className="block text-xs font-extrabold uppercase tracking-wider text-[#182538]"
+                >
+                  Alamat Email
+                </label>
+                <input
+                  id="contact-email"
+                  type="email"
+                  required
+                  value={senderEmail}
+                  onChange={(e) => setSenderEmail(e.target.value)}
+                  placeholder="cth. nama@perusahaan.com"
+                  className="w-full px-4 sm:px-5 py-3.5 bg-[#FAF8F5] border border-[#E8E4DC] rounded-2xl text-[#182538] placeholder-[#8E9EAF] text-sm sm:text-base font-medium focus:outline-none focus:border-[#145E55] focus:bg-white focus:ring-3 focus:ring-[#145E55]/10 transition-all font-sans"
+                />
+              </div>
+            </div>
 
-          {/* GitHub */}
+            {/* Field 3: Pesan / Detail Projek */}
+            <div className="space-y-2">
+              <label
+                htmlFor="contact-message"
+                className="block text-xs font-extrabold uppercase tracking-wider text-[#182538]"
+              >
+                Pesan / Detail Projek
+              </label>
+              <textarea
+                id="contact-message"
+                required
+                rows={4}
+                value={message}
+                onChange={(e) => setMessage(e.target.value)}
+                placeholder="Ceritakan tentang ide projek Anda, kebutuhan teknis, atau hal yang ingin kita diskusikan..."
+                className="w-full px-4 sm:px-5 py-3.5 bg-[#FAF8F5] border border-[#E8E4DC] rounded-2xl text-[#182538] placeholder-[#8E9EAF] text-sm sm:text-base font-medium focus:outline-none focus:border-[#145E55] focus:bg-white focus:ring-3 focus:ring-[#145E55]/10 transition-all font-sans resize-none"
+              />
+            </div>
+
+            {/* Feedback Alerts */}
+            {status === 'success' && (
+              <div className="p-4 sm:p-5 rounded-2xl bg-[#145E55]/10 border border-[#145E55]/25 text-[#145E55] text-sm flex items-start gap-3.5">
+                <span className="text-xl leading-none">✓</span>
+                <div>
+                  <p className="font-bold text-[#145E55]">Pesan Berhasil Terkirim!</p>
+                  <p className="text-xs sm:text-sm text-[#145E55]/90 mt-0.5">{statusMessage}</p>
+                </div>
+              </div>
+            )}
+
+            {status === 'error' && (
+              <div className="p-4 sm:p-5 rounded-2xl bg-[#EA5938]/10 border border-[#EA5938]/30 text-[#EA5938] text-sm flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                <div className="flex items-start gap-2.5">
+                  <span className="text-lg leading-none">⚠️</span>
+                  <div>
+                    <p className="font-bold text-[#EA5938]">Pengiriman Otomatis Terkendala</p>
+                    <p className="text-xs text-[#576A7E] mt-0.5">{statusMessage}</p>
+                  </div>
+                </div>
+                <button
+                  type="button"
+                  onClick={handleOpenMailClient}
+                  className="px-4 py-2 bg-[#EA5938] text-white rounded-xl text-xs font-bold hover:bg-[#D44A2B] transition-all shrink-0 cursor-pointer shadow-xs"
+                >
+                  Kirim via Aplikasi Email ↗
+                </button>
+              </div>
+            )}
+
+            {/* Tombol Kirim Pesan */}
+            <div className="pt-2 border-t border-[#E8E4DC]/60 flex justify-end">
+              <button
+                type="submit"
+                disabled={status === 'sending'}
+                className="w-full sm:w-auto px-8 py-4 bg-[#145E55] hover:bg-[#0E443E] text-white text-sm sm:text-base font-bold rounded-full shadow-lg shadow-[#145E55]/20 hover:shadow-xl active:scale-98 transition-all flex items-center justify-center gap-3 cursor-pointer disabled:opacity-60 disabled:cursor-not-allowed"
+              >
+                {status === 'sending' ? (
+                  <>
+                    <svg className="animate-spin w-4 h-4 text-white" fill="none" viewBox="0 0 24 24">
+                      <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+                      <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8H4z" />
+                    </svg>
+                    <span>Mengirim Pesan...</span>
+                  </>
+                ) : (
+                  <>
+                    <span>✉</span>
+                    <span>Kirim Pesan Sekarang ↗</span>
+                  </>
+                )}
+              </button>
+            </div>
+          </form>
+        </div>
+
+        {/* Social Connect Pills yang Serasi dengan Tema */}
+        <div className="flex flex-wrap items-center justify-center gap-3 sm:gap-4 mt-8 sm:mt-10">
           <a
-            href="https://github.com/KannzDev"
+            href="https://github.com/Okansyailendra"
             target="_blank"
             rel="noopener noreferrer"
-            className="px-5 py-3 bg-malam-gunung border border-embun/40 text-tulang font-pixel text-base rounded-button hover:border-lentera hover:text-lentera active:translate-y-[1px] transition-all focus-visible:outline-2 focus-visible:outline-lentera focus-visible:outline-offset-2 flex items-center gap-2"
+            className="px-5 py-2.5 rounded-full bg-white border border-[#E8E4DC] text-[#182538] text-xs sm:text-sm font-bold flex items-center gap-2.5 hover:border-[#182538] hover:shadow-sm active:scale-98 transition-all shadow-xs"
           >
-            <svg viewBox="0 0 24 24" fill="currentColor" className="w-5 h-5" aria-hidden="true">
+            <svg className="w-4 h-4 fill-current" viewBox="0 0 24 24">
               <path d="M12 2A10 10 0 002 12c0 4.4 2.9 8.2 6.8 9.5.5.1.7-.2.7-.5v-1.7c-2.8.6-3.4-1.3-3.4-1.3-.5-1.1-1.1-1.5-1.1-1.5-.9-.6.1-.6.1-.6 1 .1 1.5 1 1.5 1 .9 1.5 2.3 1.1 2.9.8.1-.6.3-1.1.6-1.4-2.2-.3-4.6-1.1-4.6-5 0-1.1.4-2 1-2.7-.1-.3-.4-1.3.1-2.7 0 0 .8-.3 2.8 1a9.6 9.6 0 015.1 0c2-1.3 2.8-1 2.8-1 .5 1.4.2 2.4.1 2.7.7.7 1 1.6 1 2.7 0 3.9-2.4 4.7-4.6 5 .4.3.7.9.7 1.9v2.8c0 .3.2.6.7.5 4-1.3 6.8-5.1 6.8-9.5A10 10 0 0012 2z" />
             </svg>
             <span>GitHub</span>
           </a>
 
-          {/* LinkedIn */}
           <a
-            href="https://linkedin.com/in/okansyailendra"
+            href="https://instagram.com/okansyailendra"
             target="_blank"
             rel="noopener noreferrer"
-            className="px-5 py-3 bg-malam-gunung border border-embun/40 text-tulang font-pixel text-base rounded-button hover:border-lentera hover:text-lentera active:translate-y-[1px] transition-all focus-visible:outline-2 focus-visible:outline-lentera focus-visible:outline-offset-2 flex items-center gap-2"
+            className="px-5 py-2.5 rounded-full bg-white border border-[#E8E4DC] text-[#182538] text-xs sm:text-sm font-bold flex items-center gap-2.5 hover:border-[#EA5938] hover:text-[#EA5938] hover:shadow-sm active:scale-98 transition-all shadow-xs"
           >
-            <svg viewBox="0 0 24 24" fill="currentColor" className="w-5 h-5" aria-hidden="true">
-              <path d="M19 3a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h14m-.5 15.5v-5.3a3.26 3.26 0 0 0-3.26-3.26c-.85 0-1.84.52-2.28 1.3v-1.11h-2.79v8.37h2.79v-4.93c0-.77.62-1.4 1.39-1.4a1.4 1.4 0 0 1 1.4 1.4v4.93h2.75M6.46 8.76a1.64 1.64 0 1 0 0-3.28 1.64 1.64 0 0 0 0 3.28m1.4 9.74v-8.37H5.06v8.37z" />
+            <svg className="w-4 h-4 fill-currentColor" viewBox="0 0 24 24">
+              <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z" />
             </svg>
-            <span>LinkedIn</span>
+            <span>Instagram</span>
           </a>
+
+          <a
+            href={`mailto:${recipientEmail}`}
+            className="px-5 py-2.5 rounded-full bg-[#182538] text-white text-xs sm:text-sm font-bold flex items-center gap-2 hover:bg-[#145E55] active:scale-98 transition-all shadow-xs"
+          >
+            <span>✉</span>
+            <span>{recipientEmail}</span>
+          </a>
+
+          <button
+            type="button"
+            onClick={copyEmail}
+            className="px-4 py-2.5 rounded-full bg-white border border-[#E8E4DC] text-[#182538] text-xs sm:text-sm font-bold hover:border-[#145E55] hover:text-[#145E55] active:scale-98 transition-all cursor-pointer shadow-xs flex items-center gap-1.5"
+          >
+            <span>📋</span>
+            <span>{copied ? 'Tersalin!' : 'Salin Email'}</span>
+          </button>
+        </div>
+      </div>
+
+      {/* Baris Bawah Footer: Logo Okan | © 2026 All Rights Reserved */}
+      <div className="pt-6 pb-2 border-t border-[#E8E4DC] flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-[#8E9EAF]">
+        <div className="flex items-center gap-3">
+          <span className="font-script text-2xl font-bold text-[#182538]">
+            Okan
+          </span>
+          <span className="text-[#E8E4DC]">|</span>
+          <p>© 2026 Okan Syailendra. All Rights Reserved.</p>
         </div>
 
-        {/* Info footer zona */}
-        <div className="pt-6 border-t border-embun/20 flex flex-col sm:flex-row items-center justify-between gap-2 text-xs font-pixel text-embun">
-          <span>Tercatat di GitHub / Non-Monetize</span>
-          <span>WIB (UTC+07) · Siap berkontribusi</span>
-        </div>
+        <p className="text-xs text-[#8E9EAF]">
+          Designed with warm editorial aesthetics · React &amp; Tailwind CSS
+        </p>
       </div>
     </section>
   )

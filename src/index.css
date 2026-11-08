@@ -2,6 +2,30 @@
 @import "./styles/tokens.css";
 
 @theme {
+  --color-canvas: var(--color-canvas);
+  --color-canvas-card: var(--color-canvas-card);
+  --color-canvas-subtle: var(--color-canvas-subtle);
+
+  --color-ink: var(--color-ink);
+  --color-ink-muted: var(--color-ink-muted);
+  --color-ink-subtle: var(--color-ink-subtle);
+
+  --color-teal: var(--color-teal);
+  --color-teal-dark: var(--color-teal-dark);
+  --color-teal-light: var(--color-teal-light);
+
+  --color-coral: var(--color-coral);
+  --color-coral-dark: var(--color-coral-dark);
+  --color-coral-light: var(--color-coral-light);
+
+  --color-mustard: var(--color-mustard);
+  --color-mustard-dark: var(--color-mustard-dark);
+  --color-mustard-light: var(--color-mustard-light);
+
+  --color-border: var(--color-border);
+  --color-border-card: var(--color-border-card);
+
+  /* Legacy theme aliases */
   --color-malam-gunung: var(--color-malam-gunung);
   --color-kabut-lembah: var(--color-kabut-lembah);
   --color-lumut: var(--color-lumut);
@@ -10,6 +34,9 @@
   --color-tulang: var(--color-tulang);
   --color-embun: var(--color-embun);
 
+  --font-sans: var(--font-sans);
+  --font-display: var(--font-display);
+  --font-script: var(--font-script);
   --font-pixel: var(--font-pixel);
   --font-body: var(--font-body);
 
@@ -20,6 +47,7 @@
   --text-small: var(--text-small);
 
   --radius-panel: var(--radius-panel);
+  --radius-card: var(--radius-card);
   --radius-button: var(--radius-button);
   --radius-tile: var(--radius-tile);
 }
@@ -27,14 +55,18 @@
 /* ─── Base ──────────────────────────────────────────────────────────────── */
 
 :root {
-  color-scheme: dark;
+  color-scheme: light;
+}
+
+html {
+  scroll-behavior: smooth;
 }
 
 body {
   margin: 0;
-  background-color: var(--color-malam-gunung);
-  color: var(--color-tulang);
-  font-family: var(--font-body);
+  background-color: var(--color-canvas);
+  color: var(--color-ink);
+  font-family: var(--font-sans);
   font-size: var(--text-body);
   line-height: 1.6;
   min-height: 100dvh;
@@ -42,83 +74,50 @@ body {
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* ─── Mode Senja (Konami Code Easter Egg — design.md 6.8) ─────────────────── */
-body.senja {
-  --color-malam-gunung: #221A28;
-  --color-kabut-lembah: #2F2338;
-  --color-lentera: #FFA351;
-  --color-lumut: #86B870;
-  transition: background-color 600ms ease, color 600ms ease;
-}
-
-/* ─── Ambient Campfire Embers ────────────────────────────────────────────── */
-@keyframes rise-ember {
-  0% {
-    transform: translateY(0) translateX(0) scale(1);
-    opacity: 0.9;
-  }
-  50% {
-    transform: translateY(-20px) translateX(4px) scale(0.8);
-    opacity: 0.7;
-  }
-  100% {
-    transform: translateY(-45px) translateX(-4px) scale(0.2);
-    opacity: 0;
-  }
-}
-
-.animate-ember-1 {
-  animation: rise-ember 1.8s infinite ease-out;
-}
-.animate-ember-2 {
-  animation: rise-ember 2.4s infinite 0.6s ease-out;
-}
-.animate-ember-3 {
-  animation: rise-ember 2.0s infinite 1.2s ease-out;
-}
-
 h1, h2, h3, h4, h5, h6 {
-  font-family: var(--font-pixel);
+  font-family: var(--font-display);
   font-weight: 700;
+  color: var(--color-ink);
+  letter-spacing: -0.02em;
 }
 
-/* ─── Skip Navigation Link (Accessibility) ──────────────────────────────── */
+/* ─── Skip Navigation Link ──────────────────────────────────────────────── */
 
 .skip-link {
   position: absolute;
   top: -100%;
-  left: 0;
+  left: 1rem;
   z-index: 9999;
-  padding: 0.75rem 1.25rem;
-  background: var(--color-lentera);
-  color: var(--color-malam-gunung);
-  font-family: var(--font-pixel);
+  padding: 0.65rem 1.25rem;
+  background: var(--color-teal);
+  color: #ffffff;
+  font-family: var(--font-sans);
   font-size: var(--text-small);
-  font-weight: 700;
+  font-weight: 600;
   text-decoration: none;
-  border-bottom-right-radius: var(--radius-panel);
-  transition: top 100ms ease;
+  border-radius: 9999px;
+  box-shadow: 0 4px 14px rgba(20, 94, 85, 0.3);
+  transition: top 150ms ease;
 }
 
 .skip-link:focus {
-  top: 0;
-  outline: 2px solid var(--color-malam-gunung);
+  top: 1rem;
+  outline: 2px solid var(--color-coral);
   outline-offset: 2px;
 }
 
-/* ─── Global Focus Ring (Lentera, 2px, 2px offset per design.md 6.6) ────── */
+/* ─── Global Focus Ring ─────────────────────────────────────────────────── */
 
 :focus-visible {
-  outline: 2px solid var(--color-lentera);
+  outline: 2px solid var(--color-teal);
   outline-offset: 2px;
 }
 
-/* Remove focus ring for mouse users */
 :focus:not(:focus-visible) {
   outline: none;
 }
 
-/* ─── Reduced Motion: Global override (design.md 6.10) ─────────────────── */
+/* ─── Reduced Motion ────────────────────────────────────────────────────── */
 
 @media (prefers-reduced-motion: reduce) {
   *,
@@ -131,30 +130,53 @@ h1, h2, h3, h4, h5, h6 {
   }
 }
 
-/* ─── Scrollbar (subtle, branded) ───────────────────────────────────────── */
+/* ─── Scrollbar (subtle, warm) ─────────────────────────────────────────── */
 
 ::-webkit-scrollbar {
-  width: 6px;
-  height: 6px;
+  width: 7px;
+  height: 7px;
 }
 
 ::-webkit-scrollbar-track {
-  background: var(--color-malam-gunung);
+  background: var(--color-canvas);
 }
 
 ::-webkit-scrollbar-thumb {
-  background: var(--color-embun);
-  opacity: 0.4;
-  border-radius: 2px;
+  background: #D9D3C8;
+  border-radius: 9999px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: var(--color-lentera);
+  background: var(--color-teal);
 }
 
 /* ─── Selection ──────────────────────────────────────────────────────────── */
 
 ::selection {
-  background: rgba(244, 169, 59, 0.3);
-  color: var(--color-tulang);
+  background: rgba(234, 92, 56, 0.18);
+  color: var(--color-ink);
+}
+
+/* ─── Custom Utilities ──────────────────────────────────────────────────── */
+
+.pill-nav-item {
+  border-radius: 9999px;
+  padding: 0.4rem 1.15rem;
+  font-size: 0.8125rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  transition: all 0.2s ease;
+}
+
+.pill-nav-item:hover {
+  background-color: var(--color-canvas-subtle);
+  color: var(--color-teal);
+}
+
+.pill-nav-item.active {
+  border: 1px solid #132238;
+  color: #132238;
+  background-color: #FFFFFF;
+  box-shadow: 0 2px 8px rgba(19, 34, 56, 0.04);
 }

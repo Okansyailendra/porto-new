@@ -1,241 +1,133 @@
 import { useState } from 'react'
-import { profileData } from '../../data/profile'
 
-interface ProfileZoneProps {
-  hasMasterHunterBadge?: boolean
-}
+export function ProfileZone() {
+  const [activeCard, setActiveCard] = useState<number>(0)
 
-export function ProfileZone({ hasMasterHunterBadge = false }: ProfileZoneProps) {
-  const [isFlipped, setIsFlipped] = useState(false)
-
-  function toggleFlip() {
-    setIsFlipped((prev) => !prev)
-  }
+  const services = [
+    {
+      title: 'UI/UX Design',
+      projects: '10+ Desain Antarmuka & Prototipe',
+      description: 'Riset pengalaman pengguna, pembuatan wireframe interaktif, sistem desain (design system) berbasis token di Figma, dan pengujian alur navigasi digital.',
+      iconBg: 'bg-[#145E55]',
+      icon: (
+        <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 21a4 4 0 01-4-4V5a2 2 0 012-2h4a2 2 0 012 2v12a4 4 0 01-4 4zm0 0h12a2 2 0 002-2v-4a2 2 0 00-2-2h-2.343M11 7.343l1.657-1.657a2 2 0 012.828 0l2.829 2.829a2 2 0 010 2.828l-8.486 8.485M7 17h.01" />
+        </svg>
+      )
+    },
+    {
+      title: 'Full Stack Web Development',
+      projects: '12+ Sistem Handal & Skalabel',
+      description: 'Pengembangan aplikasi web end-to-end dari frontend responsif (React, TypeScript, Tailwind) hingga backend RESTful API (Node.js, Laravel) dan database MySQL.',
+      iconBg: 'bg-[#EA5C38]',
+      icon: (
+        <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4" />
+        </svg>
+      )
+    },
+    {
+      title: 'Cyber Security & Linux Systems',
+      projects: 'Eksplorasi Keamanan & Linux',
+      description: 'Mendalami fundamental cyber security, pengoperasian sistem operasi Linux, serta praktik keamanan web dan jaringan di Komunitas Koalisi.',
+      iconBg: 'bg-[#F4A723]',
+      icon: (
+        <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
+        </svg>
+      )
+    }
+  ]
 
   return (
     <section
-      id="profil"
-      aria-label="Zona 1 Profil"
-      className="py-16 md:py-20 border-t border-embun/15 text-left"
+      id="layanan"
+      aria-label="Layanan dan Nilai Utama — What do I help?"
+      className="min-h-[100dvh] flex flex-col justify-center py-16 lg:py-24 border-t border-[#E8E4DC] relative"
     >
-      <div className="flex flex-col lg:flex-row gap-10 lg:gap-14 items-start">
-        {/* Kolom Kiri: Kartu ID Bergaya Pass Game (Bisa Dibalik) */}
-        <div className="w-full sm:w-[320px] shrink-0 mx-auto lg:mx-0">
-          <div
-            tabIndex={0}
-            role="button"
-            aria-label="Kartu pass game Okan. Klik atau tekan Enter untuk membalik sisi kartu"
-            aria-expanded={isFlipped}
-            onClick={toggleFlip}
-            onKeyDown={(e) => {
-              if (e.key === 'Enter' || e.key === ' ') {
-                e.preventDefault()
-                toggleFlip()
-              }
-            }}
-            className="group relative w-full h-[440px] cursor-pointer focus-visible:outline-2 focus-visible:outline-lentera rounded-panel select-none [perspective:1000px]"
-          >
-            <div
-              className={`relative w-full h-full transition-transform duration-500 [transform-style:preserve-3d] ${
-                isFlipped ? '[transform:rotateY(180deg)]' : 'rotate-[1.5deg] group-hover:rotate-0 group-hover:scale-[1.02]'
-              } transition-all`}
-            >
-
-              {/* ── Sisi Depan Kartu — Foto Full Background ── */}
-              <div className="absolute inset-0 border border-embun/30 rounded-panel [backface-visibility:hidden] overflow-hidden shadow-xl">
-
-                {/* Foto sebagai background penuh kartu */}
-                {profileData.avatarUrl ? (
-                  <img
-                    src={profileData.avatarUrl}
-                    alt={`Foto profil ${profileData.name}`}
-                    className="absolute inset-0 w-full h-full object-cover"
-                    style={{ objectPosition: 'center 5%' }}
-                    loading="eager"
-                    decoding="async"
-                  />
-                ) : (
-                  <div className="absolute inset-0 bg-gradient-to-br from-kabut-lembah to-malam-gunung" />
-                )}
-
-                {/* Scanline — pixel aesthetic */}
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-16 xl:gap-20 items-center w-full">
+        {/* Kolom Kiri: 3 Kartu Tumpuk dengan Ikon Bulat seperti di foto referensi */}
+        <div className="lg:col-span-6 space-y-5 lg:space-y-6">
+          {services.map((service, index) => {
+            const isSelected = activeCard === index
+            return (
+              <div
+                key={index}
+                onClick={() => setActiveCard(index)}
+                className={`p-6 sm:p-8 lg:p-9 bg-white rounded-3xl border transition-all duration-300 cursor-pointer flex items-start sm:items-center gap-5 sm:gap-7 ${
+                  isSelected
+                    ? 'border-[#182538]/25 shadow-xl ring-2 ring-[#182538]/5 translate-x-1 sm:translate-x-2'
+                    : 'border-[#EFECE6] shadow-xs hover:border-[#182538]/20 hover:shadow-md'
+                }`}
+              >
+                {/* Ikon Bulat Berwarna */}
                 <div
-                  aria-hidden="true"
-                  className="absolute inset-0 pointer-events-none z-10 opacity-[0.06]"
-                  style={{
-                    backgroundImage: 'repeating-linear-gradient(0deg, transparent, transparent 3px, rgba(0,0,0,1) 3px, rgba(0,0,0,1) 4px)'
-                  }}
-                />
-
-                {/* Gradient gelap dari bawah — menjaga wajah tetap jelas, teks terbaca */}
-                <div
-                  aria-hidden="true"
-                  className="absolute inset-x-0 bottom-0 z-10 pointer-events-none"
-                  style={{
-                    height: '55%',
-                    background: 'linear-gradient(to bottom, transparent 0%, rgba(10,14,26,0.72) 35%, rgba(10,14,26,0.96) 75%, rgba(10,14,26,1) 100%)'
-                  }}
-                />
-
-                {/* Pixel corner decorators */}
-                <span aria-hidden="true" className="absolute top-0 left-0 w-4 h-4 border-t-2 border-l-2 border-lentera/70 z-30 pointer-events-none" />
-                <span aria-hidden="true" className="absolute top-0 right-0 w-4 h-4 border-t-2 border-r-2 border-lentera/70 z-30 pointer-events-none" />
-                <span aria-hidden="true" className="absolute bottom-0 left-0 w-4 h-4 border-b-2 border-l-2 border-lentera/40 z-30 pointer-events-none" />
-                <span aria-hidden="true" className="absolute bottom-0 right-0 w-4 h-4 border-b-2 border-r-2 border-lentera/40 z-30 pointer-events-none" />
-
-                {/* Status badge — top right */}
-                <div className="absolute top-3 right-3 z-20 flex items-center gap-1.5 bg-malam-gunung/75 backdrop-blur-sm px-2 py-1 rounded border border-lumut/50">
-                  <span className="w-1.5 h-1.5 rounded-full bg-lumut animate-pulse" aria-hidden="true" />
-                  <span className="font-pixel text-[10px] text-lumut uppercase tracking-widest">
-                    {profileData.status}
-                  </span>
+                  className={`w-14 h-14 sm:w-16 sm:h-16 lg:w-18 lg:h-18 rounded-full ${service.iconBg} flex items-center justify-center shrink-0 shadow-md`}
+                >
+                  <div className="scale-125">{service.icon}</div>
                 </div>
 
-                {/* Pass label — top left */}
-                <div className="absolute top-3 left-3 z-20 bg-malam-gunung/75 backdrop-blur-sm px-2 py-1 rounded border border-embun/25">
-                  <span className="font-pixel text-[10px] text-embun/90 uppercase tracking-widest">
-                    Game Pass #01
-                  </span>
-                </div>
-
-                {/* ── Overlay Teks di Bawah (di atas gradient) ── */}
-                <div className="absolute inset-x-0 bottom-0 z-20 px-5 pb-4 pt-2 flex flex-col gap-3">
-
-                  {/* Nama + Role */}
-                  <div>
-                    <p className="font-pixel text-base text-tulang leading-snug tracking-wide drop-shadow-md">
-                      {profileData.name}
-                    </p>
-                    <p className="font-body text-[11px] text-embun/80 mt-0.5">
-                      {profileData.roles[0]} · {profileData.roles[1]}
-                    </p>
-                  </div>
-
-                  {/* XP Bar */}
-                  <div className="space-y-1">
-                    <div className="flex justify-between items-center">
-                      <span className="font-pixel text-[10px] text-embun/60 uppercase tracking-wider">XP</span>
-                      <span className={`font-pixel text-[11px] ${hasMasterHunterBadge ? 'text-lentera' : 'text-embun/70'}`}>
-                        {hasMasterHunterBadge ? '🏆 Master Hunter · Lv. 24' : 'Lv. 24'}
-                      </span>
-                    </div>
-                    <div className="w-full h-1.5 bg-malam-gunung/60 rounded-full overflow-hidden border border-embun/20 backdrop-blur-sm">
-                      <div
-                        className="h-full rounded-full"
-                        style={{ width: '72%', background: 'linear-gradient(to right, #6FA36B, #F4A93B)' }}
-                      />
-                    </div>
-                  </div>
-
-                  {/* Footer hint */}
-                  <div className="flex justify-center">
-                    <span className="font-pixel text-[10px] text-embun/40 tracking-widest animate-pulse">
-                      ▼ KLIK UNTUK BALIK ▼
-                    </span>
-                  </div>
+                {/* Konten Teks Kartu */}
+                <div className="flex-1 text-left">
+                  <h3 className="text-lg sm:text-xl lg:text-2xl font-black text-[#182538]">
+                    {service.title}
+                  </h3>
+                  <p className="text-xs sm:text-sm lg:text-base font-bold text-[#8E9EAF] mt-1">
+                    {service.projects}
+                  </p>
+                  <p className={`text-xs sm:text-sm lg:text-base text-[#576A7E] mt-2.5 leading-relaxed transition-all duration-300 ${isSelected ? 'opacity-100 max-h-36' : 'opacity-80 line-clamp-2'}`}>
+                    {service.description}
+                  </p>
                 </div>
               </div>
-
-              {/* ── Sisi Belakang Kartu ── */}
-              <div className="absolute inset-0 p-5 bg-kabut-lembah border border-embun/30 rounded-panel flex flex-col justify-between [transform:rotateY(180deg)] [backface-visibility:hidden] shadow-xl overflow-hidden">
-
-                {/* Pixel corner decorators back */}
-                <span aria-hidden="true" className="absolute top-0 left-0 w-3 h-3 border-t-2 border-l-2 border-lentera/60 rounded-tl-panel z-20 pointer-events-none" />
-                <span aria-hidden="true" className="absolute top-0 right-0 w-3 h-3 border-t-2 border-r-2 border-lentera/60 rounded-tr-panel z-20 pointer-events-none" />
-
-                {/* Subtle grid background */}
-                <div
-                  aria-hidden="true"
-                  className="absolute inset-0 opacity-[0.04] pointer-events-none"
-                  style={{
-                    backgroundImage: 'linear-gradient(rgba(244,169,59,1) 1px, transparent 1px), linear-gradient(90deg, rgba(244,169,59,1) 1px, transparent 1px)',
-                    backgroundSize: '24px 24px'
-                  }}
-                />
-
-                <div className="relative z-10">
-                  <div className="flex items-center justify-between pb-3 border-b border-embun/20">
-                    <span className="font-pixel text-small text-embun uppercase tracking-wider">
-                      Catatan Petualang
-                    </span>
-                    <span className="font-pixel text-small text-lentera">Info</span>
-                  </div>
-
-                  <div className="mt-4 space-y-4 font-body text-small text-tulang">
-                    <div>
-                      <span className="font-pixel text-[10px] text-embun/60 block mb-1 uppercase tracking-widest">Peran utama:</span>
-                      <p>Frontend developer, game developer, penggiat keamanan siber.</p>
-                    </div>
-
-                    <div>
-                      <span className="font-pixel text-[10px] text-embun/60 block mb-1 uppercase tracking-widest">Afiliasi komunitas:</span>
-                      <p className="text-lumut font-bold">Komunitas Koalisi</p>
-                      <p className="text-xs text-tulang/70 mt-0.5">
-                        Co-External Affairs (fokus riset dan edukasi keamanan siber).
-                      </p>
-                    </div>
-
-                    <div>
-                      <span className="font-pixel text-[10px] text-embun/60 block mb-1 uppercase tracking-widest">Statistik:</span>
-                      <div className="flex gap-4">
-                        {profileData.stats.map((stat, i) => (
-                          <div key={i} className="text-center">
-                            <p className="font-pixel text-base text-lentera">{stat.value}</p>
-                            <p className="text-[10px] text-embun/60 font-pixel">{stat.label}</p>
-                          </div>
-                        ))}
-                      </div>
-                    </div>
-                  </div>
-                </div>
-
-                <div className="relative z-10 pt-3 border-t border-embun/20 flex justify-center">
-                  <span className="font-pixel text-[10px] text-embun/40 tracking-widest animate-pulse">
-                    ▼ KLIK UNTUK KEMBALI ▼
-                  </span>
-                </div>
-              </div>
-
-            </div>
-          </div>
+            )
+          })}
         </div>
 
-        {/* Kolom Kanan: Judul Zona, Tiga Blok Teks & Baris Statistik */}
-        <div className="flex-1 space-y-6">
-          <h2 className="font-pixel text-h2 text-tulang leading-tight">
-            Profil
-          </h2>
+        {/* Kolom Kanan: Judul 'What do I help?', Narasi, dan Angka Metrik Besar */}
+        <div className="lg:col-span-6 space-y-8 sm:space-y-10 text-left">
+          <div className="space-y-5">
+            <h2 className="text-4xl sm:text-5xl lg:text-6xl xl:text-7xl font-black text-[#182538] tracking-tight leading-[1.05]">
+              What do I help?
+            </h2>
 
-          <div className="space-y-4">
-            {profileData.bioBlocks.map((block, idx) => (
-              <div key={idx} className="space-y-1">
-                <h3 className="font-pixel text-base text-lentera">
-                  {block.title}
-                </h3>
-                <p className="font-body text-base text-tulang/90 leading-relaxed max-w-[65ch]">
-                  {block.content}
-                </p>
-              </div>
-            ))}
+            <p className="text-base sm:text-lg lg:text-xl text-[#576A7E] leading-relaxed max-w-[50ch]">
+              Saya membantu mewujudkan solusi digital mulai dari perancangan antarmuka UI/UX yang intuitif, arsitektur kode full stack yang modular dan terukur, hingga aplikasi sistem yang cepat dan aman.
+            </p>
+
+            <p className="text-base sm:text-lg lg:text-xl text-[#576A7E] leading-relaxed max-w-[50ch]">
+              Melalui pengalaman di bidang rekayasa perangkat lunak dan keaktifan di <strong className="text-[#145E55] font-bold">Komunitas Koalisi</strong> (Co-External Affairs), saya mengasah pemahaman cyber security dan sistem Linux sembari merancang antarmuka visual yang nyaman dinikmati.
+            </p>
           </div>
 
-          {/* Baris Statistik Ringkas */}
-          <div className="pt-4 border-t border-embun/20 flex flex-wrap items-center gap-x-6 gap-y-2 text-base text-tulang font-body">
-            {profileData.stats.map((stat, idx) => (
-              <div key={idx} className="flex items-center gap-2">
-                <span className="font-pixel text-lg text-lentera">
-                  {stat.value}
-                </span>
-                <span className="text-embun">
-                  {stat.label}
-                </span>
-                {idx < profileData.stats.length - 1 && (
-                  <span className="text-embun/40 ml-4 hidden sm:inline" aria-hidden="true">
-                    ·
-                  </span>
-                )}
-              </div>
-            ))}
+          {/* Baris Metrik Besar seperti '285+ Project Completed / 190+ Happy Clients' di foto referensi */}
+          <div className="pt-6 border-t border-[#E8E4DC] flex flex-wrap items-center gap-10 sm:gap-14 lg:gap-16">
+            <div>
+              <span className="text-5xl sm:text-6xl lg:text-7xl xl:text-8xl font-black text-[#182538] tracking-tight block">
+                10+
+              </span>
+              <span className="text-xs sm:text-sm lg:text-base font-extrabold text-[#576A7E] uppercase tracking-wider mt-1 block">
+                Project Selesai
+              </span>
+            </div>
+
+            <div>
+              <span className="text-5xl sm:text-6xl lg:text-7xl xl:text-8xl font-black text-[#182538] tracking-tight block">
+                12+
+              </span>
+              <span className="text-xs sm:text-sm lg:text-base font-extrabold text-[#576A7E] uppercase tracking-wider mt-1 block">
+                Teknologi Dikuasai
+              </span>
+            </div>
+
+            <div>
+              <span className="text-5xl sm:text-6xl lg:text-7xl xl:text-8xl font-black text-[#145E55] tracking-tight block">
+                100%
+              </span>
+              <span className="text-xs sm:text-sm lg:text-base font-extrabold text-[#576A7E] uppercase tracking-wider mt-1 block">
+                Dedikasi Kualitas
+              </span>
+            </div>
           </div>
         </div>
       </div>

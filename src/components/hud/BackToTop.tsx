@@ -5,8 +5,7 @@ export function BackToTop() {
 
   useEffect(() => {
     function handleScroll() {
-      // Show after scrolling past 800px (around zone 3)
-      setIsVisible(window.scrollY > 800)
+      setIsVisible(window.scrollY > 600)
     }
 
     window.addEventListener('scroll', handleScroll, { passive: true })
@@ -23,11 +22,11 @@ export function BackToTop() {
     <button
       type="button"
       onClick={scrollToTop}
-      className="fixed bottom-6 left-6 z-40 px-3 py-2 bg-kabut-lembah/90 border border-embun/40 hover:border-lentera text-tulang hover:text-lentera rounded-panel font-pixel text-xs flex items-center gap-1.5 shadow-xl backdrop-blur-xs transition-all active:translate-y-[1px] focus-visible:outline-2 focus-visible:outline-lentera select-none group"
-      aria-label="Kembali ke atas perkemahan (Hero)"
-      title="Warp kembali ke perkemahan"
+      className="fixed bottom-6 right-6 z-40 px-4 py-2.5 bg-white border border-[#E8E4DC] hover:border-[#145E55] text-[#132238] hover:text-[#145E55] rounded-full text-xs font-semibold flex items-center gap-2 shadow-lg backdrop-blur-md transition-all active:scale-95 cursor-pointer select-none"
+      aria-label="Kembali ke atas"
+      title="Kembali ke atas"
     >
-      <span className="w-4 h-4 flex items-center justify-center border border-embun/30 group-hover:border-lentera bg-malam-gunung rounded-button">
+      <span className="w-5 h-5 rounded-full bg-[#FAF8F5] border border-[#E8E4DC] flex items-center justify-center text-xs">
         ↑
       </span>
       <span className="hidden sm:inline">Ke Atas</span>
