@@ -105,7 +105,13 @@ export function HeroZone({ onExploreProjects }: HeroZoneProps) {
             />
 
             {/* Kubah Lengkung Vaulted Arch Skala Besar Warna Deep Teal dengan Grid Blueprint */}
-            <div className="relative w-[340px] sm:w-[420px] md:w-[480px] lg:w-[510px] xl:w-[560px] 2xl:w-[600px] h-[440px] sm:h-[520px] md:h-[580px] lg:h-[620px] xl:h-[660px] rounded-t-[190px] sm:rounded-t-[230px] md:rounded-t-[260px] lg:rounded-t-[290px] xl:rounded-t-[310px] bg-[#144E43] overflow-hidden flex items-end justify-center shadow-2xl">
+            <div className="relative w-[340px] sm:w-[420px] md:w-[480px] lg:w-[510px] xl:w-[560px] 2xl:w-[600px] h-[440px] sm:h-[520px] md:h-[580px] lg:h-[620px] xl:h-[660px] 2xl:h-[700px] rounded-t-[190px] sm:rounded-t-[230px] md:rounded-t-[260px] lg:rounded-t-[290px] xl:rounded-t-[310px] 2xl:rounded-t-[330px] bg-[#144E43] overflow-hidden flex items-end justify-center shadow-2xl">
+              {/* Subtle Backlight Glow Tepat di Belakang Kepala */}
+              <div
+                className="absolute top-[16%] left-1/2 -translate-x-1/2 w-72 sm:w-80 h-72 sm:h-80 rounded-full bg-[#1e6f60]/40 blur-3xl pointer-events-none"
+                aria-hidden="true"
+              />
+
               {/* Overlay Pola Grid Arsitektural & Tiga Lingkaran Konsentris Tepat di Belakang Kepala */}
               <svg
                 className="absolute inset-0 w-full h-full pointer-events-none opacity-22 text-white"
@@ -121,24 +127,24 @@ export function HeroZone({ onExploreProjects }: HeroZoneProps) {
                 </defs>
                 <rect width="100%" height="100%" fill="url(#arch-grid-pattern)" />
 
-                {/* 3 Lingkaran Konsentris Halus (Halo / Target) di Belakang Kepala */}
-                <circle cx="50%" cy="38%" r="75" stroke="currentColor" strokeWidth="1" strokeDasharray="3 3" />
-                <circle cx="50%" cy="38%" r="130" stroke="currentColor" strokeWidth="1" />
-                <circle cx="50%" cy="38%" r="185" stroke="currentColor" strokeWidth="1" strokeDasharray="4 4" />
+                {/* 3 Lingkaran Konsentris Halus (Halo / Target) Presisi di Belakang Kepala */}
+                <circle cx="50%" cy="32%" r="65" stroke="currentColor" strokeWidth="1" strokeDasharray="3 3" />
+                <circle cx="50%" cy="32%" r="120" stroke="currentColor" strokeWidth="1" />
+                <circle cx="50%" cy="32%" r="175" stroke="currentColor" strokeWidth="1" strokeDasharray="4 4" />
 
                 {/* Garis Sumbu Vertikal & Horisontal */}
                 <line x1="50%" y1="0" x2="50%" y2="100%" stroke="currentColor" strokeWidth="1" strokeDasharray="4 4" />
-                <line x1="0" y1="38%" x2="100%" y2="38%" stroke="currentColor" strokeWidth="1" strokeDasharray="4 4" />
+                <line x1="0" y1="32%" x2="100%" y2="32%" stroke="currentColor" strokeWidth="1" strokeDasharray="4 4" />
               </svg>
 
               {/* Foto Okan Transparan Berdefinisi Tinggi Tampil Besar & Gagah di Dalam Kubah */}
               <img
                 src="/foto.webp"
                 alt="Okan Syailendra"
-                width={1400}
-                height={1252}
+                width={1856}
+                height={2258}
                 onLoad={() => setPhotoLoaded(true)}
-                className={`relative z-10 w-full h-auto max-h-[430px] sm:max-h-[510px] md:max-h-[570px] lg:max-h-[610px] xl:max-h-[650px] object-contain object-bottom filter drop-shadow-2xl transition-all duration-500 ${
+                className={`relative z-10 w-full h-auto object-cover object-bottom filter drop-shadow-[0_16px_32px_rgba(0,0,0,0.4)] transition-all duration-500 ${
                   photoLoaded ? 'opacity-100 scale-100' : 'opacity-0 scale-95'
                 }`}
                 loading="eager"
